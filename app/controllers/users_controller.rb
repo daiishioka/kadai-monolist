@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   before_action :require_user_logged_in, only: [:show]
   
+  include SessionsHelper
+  
   def show
     @user = User.find(params[:id])
     @items = @user.items.uniq
@@ -17,6 +19,7 @@ class UsersController < ApplicationController
     
     if @user.save
       flash[:success] = 'ユーザ登録完了しました！'
+      session[:user_id] = @user.id
       redirect_to @user
     else
       flash.now[:danger] = 'ユーザ登録に失敗しました！'
